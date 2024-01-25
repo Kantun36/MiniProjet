@@ -10,11 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class MainActivity extends AppCompatActivity {
-    private final FirebaseFirestore db;
 
-    MainActivity(FirebaseFirestore db) {
-        this.db = db;
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
