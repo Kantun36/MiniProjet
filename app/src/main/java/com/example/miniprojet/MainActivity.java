@@ -31,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
                         TextView restaurantTextView = new TextView(this);
                         restaurantTextView.setText(restaurantName);
 
-                        Button restaurantButton = new Button(this);
-                        restaurantButton.setText(restaurantName);
 
                         LinearLayout restaurantContainer = new LinearLayout(this);
                         restaurantContainer.setOrientation(LinearLayout.HORIZONTAL);
@@ -42,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
                         verticalLayoutInsideHorizontal.setOrientation(LinearLayout.VERTICAL);
 
                         verticalLayoutInsideHorizontal.addView(restaurantTextView);
-                        verticalLayoutInsideHorizontal.addView(restaurantButton);
 
                         restaurantContainer.addView(verticalLayoutInsideHorizontal);
 
