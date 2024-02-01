@@ -1,57 +1,68 @@
 package com.example.miniprojet;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
+import android.view.animation.BounceInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.type.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        // Récupérer la référence de la collection "restaurant" dans Firestore
-        CollectionReference restaurantCollection = db.collection("restaurant");
-
-        // Effectuer une requête pour récupérer tous les documents de la collection
-        restaurantCollection.get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    // La requête a réussi, vous pouvez traiter les résultats ici
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        // Accédez aux données de chaque document
-                        String restaurantName = document.getString("nom"); // Remplacez "nom" par le champ réel que vous souhaitez afficher
-                        Log.d("MainActivity", "Nom du restaurant : " + restaurantName);
-                        // Créez un nouveau TextView pour afficher le nom du restaurant
-                        TextView restaurantTextView = new TextView(this);
-                        restaurantTextView.setText(restaurantName);
-
-
-                        LinearLayout restaurantContainer = new LinearLayout(this);
-                        restaurantContainer.setOrientation(LinearLayout.HORIZONTAL);
-                        restaurantContainer.setPadding(50, 0, 50, 100);
-
-                        LinearLayout verticalLayoutInsideHorizontal = new LinearLayout(this);
-                        verticalLayoutInsideHorizontal.setOrientation(LinearLayout.VERTICAL);
-
-                        verticalLayoutInsideHorizontal.addView(restaurantTextView);
-
-                        restaurantContainer.addView(verticalLayoutInsideHorizontal);
-
-                        LinearLayout restaurantsContainer = findViewById(R.id.restaurantContainer);
-                        restaurantsContainer.addView(restaurantContainer);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // La requête a échoué, gérez l'erreur ici
-                    Log.w("MainActivity", "Erreur lors de la récupération des données", e);
-                });
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        RecyclerView recyclerView = findViewById(R.id.recycle);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        restaurantData(new RestaurantCallback() {
+            @Override
+            public void onCallback(List<Restaurant> restaurants) {
+                Log.d("MainActivity", "MDR : " + restaurants);
+            }
+        });
+
+        Log.d("MainActivity", "MDR : ");
+        MyAdapter adapter = new MyAdapter(this, restaurantData());
+        recyclerView.setAdapter(adapter);
+
     }
+    public void restaurantData(RestaurantCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference restaurantCollection = db.collection("restaurant");
+        List<Restaurant> restaurants = new ArrayList<>();
+
+        restaurantCollection.get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        String restaurantName = document.getString("nom");
+                        String restaurantType = document.getString("type_cuisine");
+                        String restaurantAddress = document.getString("adresse");
+                        Double restaurantRating = document.getDouble("eval_moyenne");
+                        Boolean restaurantReservation = document.getBoolean("reservation_en_ligne");
+                        Timestamp restaurantOpening = document.getTimestamp("horaire_ouverture");
+                        restaurants.add(new Restaurant(restaurantName, restaurantType, restaurantAddress, 0, restaurantRating, restaurantReservation, restaurantOpening));
+                    }
+
+                    // Call the callback with the filled list
+                    callback.onCallback(restaurants);
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    Log.w("MainActivity", "Erreur lors de la récupération des données", e);
+                });
+    }
+
 }
