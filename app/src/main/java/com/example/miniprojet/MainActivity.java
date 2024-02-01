@@ -31,12 +31,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCallback(List<Restaurant> restaurants) {
                 Log.d("MainActivity", "MDR : " + restaurants);
+                MyAdapter adapter = new MyAdapter(MainActivity.this, restaurants);
+                recyclerView.setAdapter(adapter);
             }
         });
 
         Log.d("MainActivity", "MDR : ");
-        MyAdapter adapter = new MyAdapter(this, restaurantData());
-        recyclerView.setAdapter(adapter);
+
 
     }
     public void restaurantData(RestaurantCallback callback) {
