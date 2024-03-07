@@ -14,6 +14,8 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.type.DateTime;
 
 import java.text.SimpleDateFormat;
@@ -32,18 +34,16 @@ public class MainActivity extends AppCompatActivity {
         restaurantData(new RestaurantCallback() {
             @Override
             public void onCallback(List<Restaurant> restaurants) {
-                Log.d("MainActivity", "MDR : " + restaurants);
                 MyAdapter adapter = new MyAdapter(MainActivity.this, restaurants);
                 recyclerView.setAdapter(adapter);
             }
         });
 
-        Log.d("MainActivity", "MDR : ");
-
-
     }
     public void restaurantData(RestaurantCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
         CollectionReference restaurantCollection = db.collection("restaurant");
         List<Restaurant> restaurants = new ArrayList<>();
 
@@ -56,8 +56,11 @@ public class MainActivity extends AppCompatActivity {
                         Double restaurantRating = document.getDouble("eval_moyenne");
                         Boolean restaurantReservation = document.getBoolean("reservation_en_ligne");
                         Date restaurantOpening = document.getDate("horaire_ouverture");
+                        String restaurantImg = document.getString("image");
+                        StorageReference imageRef = storageRef.child(restaurantImg);
 
-                        restaurants.add(new Restaurant(restaurantName, restaurantType, restaurantAddress, 0, restaurantRating, restaurantReservation, restaurantOpening));
+
+                        restaurants.add(new Restaurant(restaurantName, restaurantType, restaurantAddress,imageRef , restaurantRating, restaurantReservation, restaurantOpening));
                     }
 
                     // Call the callback with the filled list

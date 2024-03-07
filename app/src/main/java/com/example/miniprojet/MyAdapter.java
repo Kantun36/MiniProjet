@@ -1,6 +1,11 @@
 package com.example.miniprojet;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +40,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.textViewTitle.setText(item.getTitle());
         holder.cuisineTypeTextView.setText(item.getType());
         holder.addressTextView.setText(item.getAddress());
-        holder.restaurantImageView.setImageResource(item.getImgId());
+        Log.d("Image URL", "URL: " + item.getImg().getDownloadUrl());
+
+        item.getImg().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            public void onSuccess(Uri uri) {
+                // Utilisez Glide pour charger l'image
+                Glide.with(context)
+                        .load(uri)
+                        .into(holder.restaurantImageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Gérer les échecs de récupération de l'URL
+            }
+        });
+
         holder.ratingTextView.setText(item.getRating().toString());
         holder.onlineReservationTextView.setText(item.getReservation().toString());
         holder.openingTimeTextView.setText(item.getOpening().toString());
