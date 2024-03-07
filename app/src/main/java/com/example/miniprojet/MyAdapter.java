@@ -1,5 +1,6 @@
 package com.example.miniprojet;
 import com.bumptech.glide.Glide;
+import com.example.miniprojet.model.Restaurant;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -40,11 +41,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.textViewTitle.setText(item.getTitle());
         holder.cuisineTypeTextView.setText(item.getType());
         holder.addressTextView.setText(item.getAddress());
-        Log.d("Image URL", "URL: " + item.getImg().getDownloadUrl());
 
         item.getImg().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             public void onSuccess(Uri uri) {
-                // Utilisez Glide pour charger l'image
                 Glide.with(context)
                         .load(uri)
                         .into(holder.restaurantImageView);
@@ -52,7 +51,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Gérer les échecs de récupération de l'URL
+                Log.w("MainActivity", "Erreur lors de la récupération des données", exception);
             }
         });
 

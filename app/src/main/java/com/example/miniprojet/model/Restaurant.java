@@ -1,4 +1,4 @@
-package com.example.miniprojet;
+package com.example.miniprojet.model;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.storage.StorageReference;
