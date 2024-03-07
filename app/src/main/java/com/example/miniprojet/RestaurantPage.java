@@ -48,13 +48,10 @@ public class RestaurantPage extends AppCompatActivity {
                         adresse.setText(restaurantAddress);
                         telephone.setText(restaurantPhone);
                         horaire.setText(restaurantOpening.toDate().toString());
-                        prix.setText(restaurantPrice.toString());
                         type.setText(restaurantType);
-                        capacite.setText(restaurantCapacity.toString());
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // La requête a échoué, gérez l'erreur ici
                     Log.w("RestaurantPage", "Erreur lors de la récupération des données", e);
                 });
         super.onCreate(savedInstanceState);

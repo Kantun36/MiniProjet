@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,7 +67,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return itemList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle;
         ImageView restaurantImageView;
         TextView addressTextView;
@@ -84,6 +85,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             openingTimeTextView = itemView.findViewById(R.id.ouverture);
             onlineReservationTextView = itemView.findViewById(R.id.reservable);
             ratingTextView = itemView.findViewById(R.id.rating);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        // Get the selected restaurant
+                        Restaurant selectedRestaurant = itemList.get(position);
+
+                        Intent intent = new Intent(context, RestaurantPage.class);
+                        intent.putExtra("restaurantInfo", selectedRestaurant);
+                        context.startActivity(intent);
+                    }
+                }
+            });
 
         }
     }
