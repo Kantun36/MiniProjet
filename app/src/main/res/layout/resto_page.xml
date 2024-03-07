@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="412dp"
+        android:layout_height="186dp"
+        app:srcCompat="@drawable/ic_launcher_background"
+        tools:layout_editor_absoluteX="-1dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        tools:layout_editor_absoluteX="39dp"
+        tools:layout_editor_absoluteY="207dp" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="201dp"
+        android:layout_height="107dp"
+        android:text=" dazdzadazdzazfezazfez af affa zef zenf ezbezaz dzauhdaz ue fuezza ziudaz ezczei fezguez zaz "
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="238dp" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="85dp"
+        tools:layout_editor_absoluteY="614dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mettre un avis"
+        tools:layout_editor_absoluteX="136dp"
+        tools:layout_editor_absoluteY="667dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Réserver"
+        tools:layout_editor_absoluteX="153dp"
+        tools:layout_editor_absoluteY="121dp" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DelArte"
+        android:textSize="34sp"
+        tools:layout_editor_absoluteX="149dp"
+        tools:layout_editor_absoluteY="32dp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adresse"
+        tools:layout_editor_absoluteX="275dp"
+        tools:layout_editor_absoluteY="207dp" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="155dp"
+        android:layout_height="88dp"
+        tools:layout_editor_absoluteX="232dp"
+        tools:layout_editor_absoluteY="257dp" />
+
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="149dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="2dp"
+        tools:layout_editor_absoluteY="365dp">
+
+        <TextView
+            android:id="@+id/telephone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Téléphone : " />
+
+        <TextView
+            android:id="@+id/horaire"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Horaire d'ouverture : " />
+
+        <TextView
+            android:id="@+id/prix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Prix moyen : " />
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Type de cuisine : " />
+
+        <TextView
+            android:id="@+id/capacite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Capacité d'accueil : " />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/adresse"
+        android:layout_width="173dp"
+        android:layout_height="19dp"
+        android:text="124 rue des cocotiers"
+        tools:layout_editor_absoluteX="231dp"
+        tools:layout_editor_absoluteY="234dp" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Voir le menu"
+        tools:layout_editor_absoluteX="142dp"
+        tools:layout_editor_absoluteY="529dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
