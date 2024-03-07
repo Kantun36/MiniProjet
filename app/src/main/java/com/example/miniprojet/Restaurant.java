@@ -12,9 +12,9 @@ public class Restaurant {
     private int imgId;
     private Double rating;
     private Boolean reservation;
-    private Timestamp opening;
+    private Date opening;
 
-    public Restaurant(String title, String type, String address, int imgId, Double rating, Boolean reservation, Timestamp opening) {
+    public Restaurant(String title, String type, String address, int imgId, Double rating, Boolean reservation, Date opening) {
         this.title = title;
         this.address = address;
         this.type = type;
@@ -31,7 +31,7 @@ public class Restaurant {
         return reservation;
     }
 
-    public Timestamp getOpening() {
+    public Date getOpening() {
         return opening;
     }
 

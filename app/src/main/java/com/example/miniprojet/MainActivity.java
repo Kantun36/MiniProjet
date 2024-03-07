@@ -16,7 +16,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.type.DateTime;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
                         String restaurantAddress = document.getString("adresse");
                         Double restaurantRating = document.getDouble("eval_moyenne");
                         Boolean restaurantReservation = document.getBoolean("reservation_en_ligne");
-                        Timestamp restaurantOpening = document.getTimestamp("horaire_ouverture");
+                        Date restaurantOpening = document.getDate("horaire_ouverture");
+
                         restaurants.add(new Restaurant(restaurantName, restaurantType, restaurantAddress, 0, restaurantRating, restaurantReservation, restaurantOpening));
                     }
 

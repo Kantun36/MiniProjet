@@ -4,12 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card"
     android:layout_width="match_parent"
-    android:layout_height="173dp">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="171dp"
+        tools:ignore="TextSizeCheck"
+        tools:layout_editor_absoluteY="1dp">
 
         <ImageView
             android:id="@+id/img"
@@ -29,11 +35,11 @@
 
         <TextView
             android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="198dp"
+            android:layout_height="22dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="119dp"
-            android:layout_marginEnd="266dp"
+            android:layout_marginTop="116dp"
+            android:layout_marginEnd="197dp"
             android:layout_marginBottom="35dp"
             android:text="118 rue de narbonne"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -43,12 +49,12 @@
 
         <TextView
             android:id="@+id/type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="121dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="252dp"
-            android:layout_marginBottom="138dp"
+            android:layout_width="122dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="113dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="160dp"
+            android:layout_marginBottom="136dp"
             android:text="Italien"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,12 +63,12 @@
 
         <TextView
             android:id="@+id/titleCard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="121dp"
-            android:layout_marginTop="52dp"
-            android:layout_marginEnd="237dp"
-            android:layout_marginBottom="94dp"
+            android:layout_width="254dp"
+            android:layout_height="29dp"
+            android:layout_marginStart="114dp"
+            android:layout_marginTop="51dp"
+            android:layout_marginEnd="27dp"
+            android:layout_marginBottom="91dp"
             android:text="Bistro"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -74,25 +80,43 @@
             android:id="@+id/rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="377dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="138dp"
             android:text="4.5"
-            tools:layout_editor_absoluteX="377dp"
-            tools:layout_editor_absoluteY="16dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/reservable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="264dp"
+            android:layout_marginTop="138dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="16dp"
             android:text="Reservable en ligne"
-            tools:layout_editor_absoluteX="264dp"
-            tools:layout_editor_absoluteY="138dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/ouverture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="88dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="146dp"
+            android:layout_marginEnd="307dp"
+            android:layout_marginBottom="6dp"
             android:text="10:00"
-            tools:layout_editor_absoluteX="18dp"
-            tools:layout_editor_absoluteY="146dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
