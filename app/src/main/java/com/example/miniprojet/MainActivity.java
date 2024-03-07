@@ -6,17 +6,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.animation.BounceInterpolator;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.google.firebase.Timestamp;
+import com.example.miniprojet.model.Restaurant;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.type.DateTime;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,18 +29,16 @@ public class MainActivity extends AppCompatActivity {
         restaurantData(new RestaurantCallback() {
             @Override
             public void onCallback(List<Restaurant> restaurants) {
-                Log.d("MainActivity", "MDR : " + restaurants);
                 MyAdapter adapter = new MyAdapter(MainActivity.this, restaurants);
                 recyclerView.setAdapter(adapter);
             }
         });
 
-        Log.d("MainActivity", "MDR : ");
-
-
     }
     public void restaurantData(RestaurantCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
         CollectionReference restaurantCollection = db.collection("restaurant");
         List<Restaurant> restaurants = new ArrayList<>();
 
@@ -53,8 +50,12 @@ public class MainActivity extends AppCompatActivity {
                         String restaurantAddress = document.getString("adresse");
                         Double restaurantRating = document.getDouble("eval_moyenne");
                         Boolean restaurantReservation = document.getBoolean("reservation_en_ligne");
-                        Timestamp restaurantOpening = document.getTimestamp("horaire_ouverture");
-                        restaurants.add(new Restaurant(restaurantName, restaurantType, restaurantAddress, 0, restaurantRating, restaurantReservation, restaurantOpening));
+                        Date restaurantOpening = document.getDate("horaire_ouverture");
+                        String restaurantImg = document.getString("image");
+                        StorageReference imageRef = storageRef.child(restaurantImg);
+
+
+                        restaurants.add(new Restaurant(restaurantName, restaurantType, restaurantAddress,imageRef , restaurantRating, restaurantReservation, restaurantOpening));
                     }
 
                     // Call the callback with the filled list
