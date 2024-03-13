@@ -1,5 +1,6 @@
 package com.example.miniprojet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
@@ -52,6 +53,15 @@ public class RestaurantPage extends AppCompatActivity {
             public void onClick(View v) {
                 // Terminer l'activité actuelle pour revenir à la liste des restaurants
                 finish();
+            }
+        });
+        Button reviewButton = findViewById(R.id.avis);
+        reviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RestaurantPage.this, ReviewActivity.class);
+                intent.putExtra("restaurantId", selectedRestaurant.getId());
+                startActivity(intent);
             }
         });
     }

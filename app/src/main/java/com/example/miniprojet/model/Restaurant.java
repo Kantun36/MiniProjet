@@ -15,6 +15,7 @@ import java.util.Date;
 
 @SuppressLint("ParcelCreator")
 public class Restaurant implements Parcelable {
+    private String id;
     private String title;
     private String type;
     private String address;
@@ -28,6 +29,7 @@ public class Restaurant implements Parcelable {
     private Date opening;
 
     protected Restaurant(Parcel in) {
+        id = in.readString();
         title = in.readString();
         type = in.readString();
         address = in.readString();
@@ -41,7 +43,8 @@ public class Restaurant implements Parcelable {
         long openingMillis = in.readLong();
         opening = new Date(openingMillis);
     }
-    public Restaurant(String title, String type, String address,String description,String prixMoy, String tel,String capacity, String img, Double rating, Boolean reservation, Date opening) {
+    public Restaurant(String id,String title, String type, String address,String description,String prixMoy, String tel,String capacity, String img, Double rating, Boolean reservation, Date opening) {
+        this.id = id;
         this.title = title;
         this.address = address;
         this.description = description;
@@ -68,6 +71,10 @@ public class Restaurant implements Parcelable {
     };
     public String getImg() {
         return img;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public Boolean getReservation() {
@@ -118,6 +125,7 @@ public class Restaurant implements Parcelable {
     @SuppressLint("NewApi")
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(title);
         dest.writeString(type);
         dest.writeString(address);

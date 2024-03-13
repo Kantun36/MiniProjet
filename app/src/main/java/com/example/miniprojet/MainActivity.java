@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         restaurantCollection.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        String restaurantId = document.getId();
                         String restaurantName = document.getString("nom");
                         String restaurantType = document.getString("type_cuisine");
                         String restaurantAddress = document.getString("adresse");
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                                 String imageString = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
                                 // Ajouter le restaurant avec la chaîne de caractères de l'image à la liste
-                                restaurants.add(new Restaurant(restaurantName, restaurantType, restaurantAddress,restaurantDescription,restaurantPrixMoy,restaurantTel,restaurantCapacity, imageString, restaurantRating, restaurantReservation, restaurantOpening));
+                                restaurants.add(new Restaurant(restaurantId,restaurantName, restaurantType, restaurantAddress,restaurantDescription,restaurantPrixMoy,restaurantTel,restaurantCapacity, imageString, restaurantRating, restaurantReservation, restaurantOpening));
 
                                 // Vérifier si tous les restaurants ont été ajoutés à la liste
                                 if (restaurants.size() == queryDocumentSnapshots.size()) {
