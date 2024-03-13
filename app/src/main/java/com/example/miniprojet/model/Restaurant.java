@@ -1,6 +1,7 @@
 package com.example.miniprojet.model;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -17,7 +18,11 @@ public class Restaurant implements Parcelable {
     private String title;
     private String type;
     private String address;
-    private StorageReference img;
+    private String description;
+    private String prixMoy;
+    private String tel;
+    private String capacity;
+    private String img;
     private Double rating;
     private Boolean reservation;
     private Date opening;
@@ -26,17 +31,42 @@ public class Restaurant implements Parcelable {
         title = in.readString();
         type = in.readString();
         address = in.readString();
+        description = in.readString();
+        prixMoy = in.readString();
+        tel = in.readString();
+        capacity = in.readString();
+        img = in.readString();
+        rating = in.readDouble();
+        reservation = in.readByte() != 0;
+        long openingMillis = in.readLong();
+        opening = new Date(openingMillis);
     }
-    public Restaurant(String title, String type, String address, StorageReference img, Double rating, Boolean reservation, Date opening) {
+    public Restaurant(String title, String type, String address,String description,String prixMoy, String tel,String capacity, String img, Double rating, Boolean reservation, Date opening) {
         this.title = title;
         this.address = address;
+        this.description = description;
+        this.prixMoy = prixMoy;
+        this.tel = tel;
+        this.capacity = capacity;
         this.type = type;
         this.img = img;
         this.rating = rating;
         this.reservation = reservation;
         this.opening = opening;
     }
-    public StorageReference getImg() {
+
+    public static final Creator<Restaurant> CREATOR = new Creator<Restaurant>() {
+        @Override
+        public Restaurant createFromParcel(Parcel in) {
+            return new Restaurant(in);
+        }
+
+        @Override
+        public Restaurant[] newArray(int size) {
+            return new Restaurant[size];
+        }
+    };
+    public String getImg() {
         return img;
     }
 
@@ -64,6 +94,22 @@ public class Restaurant implements Parcelable {
         return address;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public String getPrixMoy() {
+        return prixMoy;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public String getCapacity() {
+        return capacity;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -73,12 +119,16 @@ public class Restaurant implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(title);
-        dest.writeString(address);
         dest.writeString(type);
-        dest.writeString(String.valueOf(img));
+        dest.writeString(address);
+        dest.writeString(description);
+        dest.writeString(prixMoy);
+        dest.writeString(tel);
+        dest.writeString(capacity);
+        dest.writeString(img);
         dest.writeDouble(rating);
-        dest.writeBoolean(reservation);
-        dest.writeSerializable(opening);
+        dest.writeByte((byte) (reservation ? 1 : 0));
+        dest.writeLong(opening.getTime());
 
     }
 }
