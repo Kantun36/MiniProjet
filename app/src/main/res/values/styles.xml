@@ -1,0 +1,13 @@
+<resources>
+    <style name="CalendarDateText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+        <!-- Autres attributs de style des dates -->
+    </style>
+
+    <style name="CalendarWeekDayText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+        <!-- Autres attributs de style des jours de la semaine -->
+    </style>
+</resources>

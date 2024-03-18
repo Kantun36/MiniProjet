@@ -38,6 +38,15 @@
                 <data android:scheme="http" android:host="yourhost" android:pathPrefix="/detail" />
             </intent-filter>
         </activity>
+        <activity android:name=".ReservationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="yourhost" android:pathPrefix="/detail" />
+            </intent-filter>
+        </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.miniprojet.fileprovider"

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/reservation_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Écrivez votre nom ici"
+        android:inputType="textMultiLine" />
+
+
+    <EditText
+        android:id="@+id/nombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Nombre de personnes"
+        android:inputType="number" />
+
+    <CalendarView
+        android:id="@+id/date_reservation"
+        android:layout_width="match_parent"
+        android:layout_height="176dp"
+        android:layout_gravity="center"
+        android:dateTextAppearance="@style/CalendarDateText"
+        android:firstDayOfWeek="1"
+        android:showWeekNumber="false"
+        android:shownWeekCount="1"
+        android:weekDayTextAppearance="@style/CalendarWeekDayText" />
+
+
+    <TimePicker
+        android:id="@+id/heure_reservation"
+        android:layout_width="wrap_content"
+        android:layout_height="179dp"
+        android:timePickerMode="spinner" />
+
+    <Button
+        android:id="@+id/submit_reservation_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirmer la réservation" />
+
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="118dp"
+        android:layout_height="wrap_content"
+        android:text="Retour" />
+
+</LinearLayout>

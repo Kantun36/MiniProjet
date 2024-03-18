@@ -64,6 +64,17 @@ public class RestaurantPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        reservationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Créer une intention pour démarrer l'activité de réservation
+                Intent intent = new Intent(RestaurantPage.this, ReservationActivity.class);
+                intent.putExtra("restaurantId", selectedRestaurant.getId());
+                // Démarrer l'activité
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void displayRestaurantInfo(Restaurant restaurant, TextView title, TextView description, TextView adresse,
