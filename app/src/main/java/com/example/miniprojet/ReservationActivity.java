@@ -14,14 +14,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.miniprojet.model.Reservation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -36,8 +35,11 @@ public class ReservationActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
     String restaurantId;
+    String restaurantCapacite;
 
     String formattedDate;
+    String selectedTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +56,6 @@ public class ReservationActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         restaurantId = intent.getStringExtra("restaurantId"); // Utilisation de la variable de classe restaurantId
-
         dateReservation.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -79,22 +80,24 @@ public class ReservationActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        heureReservation.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                // Convertir l'heure et les minutes en une chaîne lisible
+                selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
+
+                // Afficher l'heure sélectionnée dans la console
+                Log.d("ReservationActivity", "Heure sélectionnée: " + selectedTime);
+            }
+        });
     }
 
     private void confirmReservation() {
         String name = reservationText.getText().toString().trim();
         String numberOfPeople = nombrePersonne.getText().toString().trim();
-        // Obtenez la date sélectionnée dans le calendrier
 
-
-        // Obtenez l'heure sélectionnée dans le TimePicker
-        int hour = heureReservation.getHour();
-        int minute = heureReservation.getMinute();
-
-        // Convertir l'heure et les minutes en une chaîne lisible
-        String selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
-
-        if (name.isEmpty() || selectedTime.isEmpty() || numberOfPeople.isEmpty()) {
+        if (name.isEmpty() || formattedDate == null || numberOfPeople.isEmpty()) {
             Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -104,20 +107,12 @@ public class ReservationActivity extends AppCompatActivity {
             return;
         }
 
-        // Convertir la date sélectionnée en une chaîne lisible
-        //String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month, year);
-        //Log.d("ReservationActivity", "Date sélectionnée: " + formattedDate);
-
-        // Créer un objet pour stocker les détails de la réservation
-        Map<String, Object> reservationData = new HashMap<>();
-        reservationData.put("name", name);
-        reservationData.put("nombre", numberOfPeople);
-        reservationData.put("date", formattedDate); // Ajouter la date
-        reservationData.put("time", selectedTime);
+        // Créer un objet Reservation pour stocker les détails de la réservation
+        Reservation reservation = new Reservation(name, numberOfPeople, formattedDate, selectedTime);
 
         // Ajouter la réservation à la collection appropriée dans Firestore
         db.collection("restaurant").document(restaurantId).collection("reservation")
-                .add(reservationData)
+                .add(reservation)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
