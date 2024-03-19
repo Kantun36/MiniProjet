@@ -44,4 +44,9 @@
         android:layout_height="wrap_content"
         android:text="Retour" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleReview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>

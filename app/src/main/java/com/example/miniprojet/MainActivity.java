@@ -33,13 +33,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView recyclerView = findViewById(R.id.recycle);
+        RecyclerView recyclerView = findViewById(R.id.recycleReview);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         restaurantData(new RestaurantCallback() {
             @Override
             public void onCallback(List<Restaurant> restaurants) {
-                MyAdapter adapter = new MyAdapter(MainActivity.this, restaurants);
+                RestaurantAdapter adapter = new RestaurantAdapter(MainActivity.this, restaurants);
                 recyclerView.setAdapter(adapter);
             }
         });
