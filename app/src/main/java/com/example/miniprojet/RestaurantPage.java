@@ -2,6 +2,7 @@ package com.example.miniprojet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -13,18 +14,44 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.miniprojet.model.Restaurant;
 
+
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.views.MapView;
 
-public class RestaurantPage extends AppCompatActivity {
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.util.GeoPoint;
+
+
+public class RestaurantPage extends AppCompatActivity{
+    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resto_page);
+
+        // Initialisation de la configuration osmdroid (nécessaire avant l'initialisation de MapView)
+        Configuration.getInstance().load(getApplicationContext(), PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+
+        // Initialisation du MapView
+        mapView = findViewById(R.id.mapView);
+
+        // Configuration de la source de tuiles
+        mapView.setTileSource(TileSourceFactory.MAPNIK); // Utilisation de la source de tuiles MAPNIK (OpenStreetMap)
+
+        // Activation des contrôles de zoom
+        mapView.setBuiltInZoomControls(true);
+
+
 
         // Récupérer l'objet Restaurant sélectionné à partir de l'intent
         Restaurant selectedRestaurant = getIntent().getParcelableExtra("restaurantInfo");
@@ -70,7 +97,6 @@ public class RestaurantPage extends AppCompatActivity {
                 // Créer une intention pour démarrer l'activité de réservation
                 Intent intent = new Intent(RestaurantPage.this, ReservationActivity.class);
                 intent.putExtra("restaurantId", selectedRestaurant.getId());
-                // Démarrer l'activité
                 startActivity(intent);
             }
         });
@@ -92,6 +118,7 @@ public class RestaurantPage extends AppCompatActivity {
         String restaurantPhone = restaurant.getTel();
         String restaurantPrice = restaurant.getPrixMoy();
         String restaurantCapacity = restaurant.getCapacity();
+        com.google.firebase.firestore.GeoPoint restaurantLocation = restaurant.getLocation(); // Récupérer la localisation du restaurant
 
         // Afficher les informations du restaurant sélectionné dans les TextViews
         title.setText(restaurantName);
@@ -123,6 +150,22 @@ public class RestaurantPage extends AppCompatActivity {
         String newTextCapacity = existingTextCapacity + " " + restaurantCapacity;
         capacite.setText(newTextCapacity);
 
+        if (restaurantLocation != null) {
+            // Extraire les coordonnées de latitude et de longitude
+            double latitude = restaurantLocation.getLatitude();
+            double longitude = restaurantLocation.getLongitude();
+
+            // Créer un marqueur pour le restaurant
+            Marker restaurantMarker = new Marker(mapView);
+            restaurantMarker.setPosition(new GeoPoint(latitude, longitude));
+            restaurantMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            restaurantMarker.setTitle("Restaurant");
+            mapView.getOverlays().add(restaurantMarker);
+
+            // Centrer la carte sur le restaurant avec un niveau de zoom approprié
+            mapView.getController().setCenter(new GeoPoint(latitude, longitude));
+            mapView.getController().setZoom(12); // Niveau de zoom 12
+        }
         // Vérifier si les réservations sont autorisées pour le restaurant sélectionné
         if (restaurantReservation) {
             // Les réservations sont autorisées, donc le bouton "réserver" est activé
@@ -131,5 +174,29 @@ public class RestaurantPage extends AppCompatActivity {
             // Les réservations ne sont pas autorisées, donc le bouton "réserver" est désactivé
             reservationButton.setEnabled(false);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        ;
     }
 }

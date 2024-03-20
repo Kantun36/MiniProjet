@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.StorageReference;
 import com.google.type.DateTime;
 
@@ -28,6 +29,8 @@ public class Restaurant implements Parcelable {
     private Boolean reservation;
     private Date opening;
 
+    private GeoPoint location;
+
     protected Restaurant(Parcel in) {
         id = in.readString();
         title = in.readString();
@@ -42,8 +45,9 @@ public class Restaurant implements Parcelable {
         reservation = in.readByte() != 0;
         long openingMillis = in.readLong();
         opening = new Date(openingMillis);
+        location = in.readParcelable(GeoPoint.class.getClassLoader());
     }
-    public Restaurant(String id,String title, String type, String address,String description,String prixMoy, String tel,String capacity, String img, Double rating, Boolean reservation, Date opening) {
+    public Restaurant(String id,String title, String type, String address,String description,String prixMoy, String tel,String capacity, String img, Double rating, Boolean reservation, Date opening, GeoPoint location){
         this.id = id;
         this.title = title;
         this.address = address;
@@ -56,6 +60,7 @@ public class Restaurant implements Parcelable {
         this.rating = rating;
         this.reservation = reservation;
         this.opening = opening;
+        this.location = location;
     }
 
     public static final Creator<Restaurant> CREATOR = new Creator<Restaurant>() {
@@ -117,6 +122,10 @@ public class Restaurant implements Parcelable {
         return capacity;
     }
 
+    public GeoPoint getLocation() {
+        return location;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -137,7 +146,7 @@ public class Restaurant implements Parcelable {
         dest.writeDouble(rating);
         dest.writeByte((byte) (reservation ? 1 : 0));
         dest.writeLong(opening.getTime());
-
+        dest.writeParcelable((Parcelable) location, flags);
     }
 }
 

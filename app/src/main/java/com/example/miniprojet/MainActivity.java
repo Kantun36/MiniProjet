@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                         Double restaurantRating = document.getDouble("eval_moyenne");
                         Boolean restaurantReservation = document.getBoolean("reservation_en_ligne");
                         Date restaurantOpening = document.getDate("horaire_ouverture");
+                        GeoPoint location = document.getGeoPoint("location");
                         String restaurantImg = document.getString("image");
 
                         String restaurantCapacity = (document.getString("capacite"));
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                                 String imageString = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
                                 // Ajouter le restaurant avec la chaîne de caractères de l'image à la liste
-                                restaurants.add(new Restaurant(restaurantId,restaurantName, restaurantType, restaurantAddress,restaurantDescription,restaurantPrixMoy,restaurantTel,restaurantCapacity, imageString, restaurantRating, restaurantReservation, restaurantOpening));
+                                restaurants.add(new Restaurant(restaurantId,restaurantName, restaurantType, restaurantAddress,restaurantDescription,restaurantPrixMoy,restaurantTel,restaurantCapacity, imageString, restaurantRating, restaurantReservation, restaurantOpening, location));
 
                                 // Vérifier si tous les restaurants ont été ajoutés à la liste
                                 if (restaurants.size() == queryDocumentSnapshots.size()) {
