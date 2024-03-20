@@ -38,7 +38,7 @@
     <TextureView
         android:id="@+id/review_texture_view"
         android:layout_width="match_parent"
-        android:layout_height="397dp" />
+        android:layout_height="276dp" />
 
     <Button
         android:id="@+id/submit_review_button"

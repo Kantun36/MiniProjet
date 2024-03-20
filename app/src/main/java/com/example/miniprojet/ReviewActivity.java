@@ -7,28 +7,23 @@ import android.content.Intent;
 
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.ImageFormat;
+
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
-import android.media.Image;
-import android.media.ImageReader;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
+
 
 import android.view.Surface;
 import android.view.TextureView;
 
-import android.util.Base64;
 import android.util.Log;
 
 import android.view.View;
@@ -48,12 +43,10 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.miniprojet.model.Restaurant;
 
 import com.example.miniprojet.model.Review;
 
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -95,6 +88,10 @@ public class ReviewActivity extends AppCompatActivity {
     private TextureView mTextureView;
 
     private Uri photoUri;
+
+    private CameraDevice mCameraDevice;
+    private CameraCaptureSession mCaptureSession;
+    private CameraManager mCameraManager;
 
 
 
@@ -186,9 +183,6 @@ public class ReviewActivity extends AppCompatActivity {
                 });
     }
 
-    private CameraDevice mCameraDevice;
-    private CameraCaptureSession mCaptureSession;
-    private CameraManager mCameraManager;
 
 
     private void openCamera() {
