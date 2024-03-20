@@ -1,14 +1,10 @@
 package com.example.miniprojet;
 import com.bumptech.glide.Glide;
 import com.example.miniprojet.model.Restaurant;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder> {
 
     private List<Restaurant> itemList;
     private Context context;
 
-    public MyAdapter(Context context, List<Restaurant> itemList) {
+    public RestaurantAdapter(Context context, List<Restaurant> itemList) {
         this.context = context;
         this.itemList = itemList;
     }
@@ -77,7 +73,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewTitle = itemView.findViewById(R.id.titleCard);
+            textViewTitle = itemView.findViewById(R.id.reviewTexte);
             cuisineTypeTextView = itemView.findViewById(R.id.type);
             restaurantImageView = itemView.findViewById(R.id.img);
             addressTextView = itemView.findViewById(R.id.address);
