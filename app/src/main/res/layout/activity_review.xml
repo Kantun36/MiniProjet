@@ -26,11 +26,19 @@
         android:layout_height="wrap_content"
         android:text="Prendre une photo" />
 
-    <ImageView
-        android:id="@+id/review_image"
+    <Button
+        android:id="@+id/save_photo_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Photo"
+        android:layout_below="@id/take_photo_button"
+        android:layout_centerHorizontal="true"/>
+
+
+    <TextureView
+        android:id="@+id/review_texture_view"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop" />
+        android:layout_height="397dp" />
 
     <Button
         android:id="@+id/submit_review_button"

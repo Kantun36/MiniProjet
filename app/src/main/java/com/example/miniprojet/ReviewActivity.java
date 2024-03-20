@@ -1,10 +1,26 @@
 package com.example.miniprojet;
 
+import android.Manifest;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
+import android.graphics.SurfaceTexture;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CaptureRequest;
+import android.media.Image;
+import android.media.ImageReader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +30,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+
 import com.example.miniprojet.model.Review;
 
 
@@ -33,11 +51,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 public class ReviewActivity extends AppCompatActivity {
+    private static final int CAMERA_PERMISSION_REQUEST = 1001;
+
 
     private EditText reviewComment;
     private RatingBar reviewRating;
@@ -45,20 +67,23 @@ public class ReviewActivity extends AppCompatActivity {
     private Button takePhotoButton;
     private Button submitReviewButton;
 
+    private TextureView mTextureView;
+
     private Uri photoUri;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
 
-        reviewComment = findViewById(R.id.review_text);
-        reviewRating = findViewById(R.id.review_rating);
-        reviewPhoto = findViewById(R.id.review_image);
+        mTextureView = findViewById(R.id.review_texture_view);
         takePhotoButton = findViewById(R.id.take_photo_button);
         submitReviewButton = findViewById(R.id.submit_review_button);
-
+        reviewComment = findViewById(R.id.review_text);
         Button retourButton = findViewById(R.id.exitButton);
+        reviewRating = findViewById(R.id.review_rating);
         retourButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,24 +94,22 @@ public class ReviewActivity extends AppCompatActivity {
         takePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-                        // Error occurred while creating the File
-                    }
-                    if (photoFile != null) {
-                        photoUri = FileProvider.getUriForFile(ReviewActivity.this,
-                                "com.example.miniprojet.fileprovider",
-                                photoFile);
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                        startActivityForResult(takePictureIntent, 1);
-                    }
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST);
+                    return;
                 }
+                openCamera();
             }
         });
+
+        Button savePhotoButton = findViewById(R.id.save_photo_button);
+        savePhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                savePhoto();
+            }
+        });
+
 
         submitReviewButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +121,81 @@ public class ReviewActivity extends AppCompatActivity {
                 uploadReviewData(comment, rating);
             }
         });
+    }
+
+    private CameraDevice mCameraDevice;
+    private CameraCaptureSession mCaptureSession;
+    private CameraManager mCameraManager;
+
+
+    private void openCamera() {
+        mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        try {
+            String cameraId = mCameraManager.getCameraIdList()[0]; // Choix de la caméra arrière par défaut, vous pouvez modifier cela selon vos besoins
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST);
+                return;
+            }
+            mCameraManager.openCamera(cameraId, new CameraDevice.StateCallback() {
+                @Override
+                public void onOpened(@NonNull CameraDevice camera) {
+                    mCameraDevice = camera;
+                    createCameraPreview();
+                }
+
+                @Override
+                public void onDisconnected(@NonNull CameraDevice camera) {
+                    camera.close();
+                    mCameraDevice = null;
+                }
+
+                @Override
+                public void onError(@NonNull CameraDevice camera, int error) {
+                    camera.close();
+                    mCameraDevice = null;
+                }
+            }, null);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createCameraPreview() {
+        try {
+            SurfaceTexture texture = mTextureView.getSurfaceTexture();
+            if (texture == null) {
+                // Gestion de l'erreur
+                return;
+            }
+            texture.setDefaultBufferSize(640, 480); // Taille par défaut de la surface de prévisualisation
+            Surface surface = new Surface(texture);
+            final CaptureRequest.Builder captureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+            captureRequestBuilder.addTarget(surface);
+
+            mCameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
+                @Override
+                public void onConfigured(@NonNull CameraCaptureSession session) {
+                    if (mCameraDevice == null) {
+                        return;
+                    }
+
+                    mCaptureSession = session;
+                    try {
+                        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+                        mCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onConfigureFailed(@NonNull CameraCaptureSession session) {
+                    Toast.makeText(ReviewActivity.this, "Failed to configure camera preview.", Toast.LENGTH_SHORT).show();
+                }
+            }, null);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     private void uploadReviewData(String comment, float rating) {
@@ -154,27 +252,36 @@ public class ReviewActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            Glide.with(this).load(photoUri).into(reviewPhoto);
+    private void savePhoto() {
+        if (mTextureView.isAvailable()) {
+            Bitmap bitmap = mTextureView.getBitmap();
+            if (bitmap != null) {
+                photoUri = saveBitmapAndGetUri(bitmap);
+                Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+    private Uri saveBitmapAndGetUri(Bitmap bitmap) {
+        Uri imageUri = null;
+        File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (directory != null) {
+            String fileName = "preview_image_" + System.currentTimeMillis() + ".jpg";
+            File file = new File(directory, fileName);
 
-        // Save a file: path for use with ACTION_VIEW intents
-        String mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
+            try {
+                FileOutputStream outputStream = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                outputStream.close();
+                imageUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return imageUri;
     }
+
+
+
+
 }
