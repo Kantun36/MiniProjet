@@ -102,11 +102,23 @@ public class ReviewActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Rafraîchir les données
+        refreshData();
+    }
 
-
-
-
-
-
+    private void refreshData() {
+        RecyclerView recyclerView = findViewById(R.id.recycleReview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        reviewData(new ReviewCallback() {
+            @Override
+            public void onCallback(List<Review> reviews) {
+                ReviewAdapter adapter = new ReviewAdapter(ReviewActivity.this, reviews);
+                recyclerView.setAdapter(adapter);
+            }
+        });
+    }
 
 }

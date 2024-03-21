@@ -35,6 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -168,8 +169,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     double averageRating = (numberOfReviews > 0) ? totalRating / numberOfReviews : 0;
+                    // Formater la moyenne avec un seul chiffre après la virgule
+                    DecimalFormat df = new DecimalFormat("#.#");
+                    double formattedAverageRating = Double.parseDouble(df.format(averageRating));
                     // Retourne la moyenne via le listener
-                    listener.onAverageRatingCalculated(averageRating);
+                    listener.onAverageRatingCalculated(formattedAverageRating);
                 } else {
                     // En cas d'erreur, retourne une moyenne de 0
                     listener.onAverageRatingCalculated(0);
@@ -178,10 +182,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     // Interface pour écouter le calcul de la moyenne du rating
     public interface OnAverageRatingCalculatedListener {
         void onAverageRatingCalculated(double averageRating);
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Rafraîchir les données
+        refreshData();
+    }
 
+    private void refreshData() {
+        RecyclerView recyclerView = findViewById(R.id.recycleReview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        restaurantData(new RestaurantCallback() {
+            @Override
+            public void onCallback(List<Restaurant> restaurants) {
+                RestaurantAdapter adapter = new RestaurantAdapter(MainActivity.this, restaurants);
+                recyclerView.setAdapter(adapter);
+            }
+        });
+    }
 
 }
