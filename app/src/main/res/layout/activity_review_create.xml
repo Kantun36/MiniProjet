@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/review_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Écrivez votre avis ici"
+        android:inputType="textMultiLine" />
+
+    <RatingBar
+        android:id="@+id/review_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5" />
+
+    <Button
+        android:id="@+id/take_photo_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prendre une photo" />
+
+    <Button
+        android:id="@+id/save_photo_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Photo"
+        android:layout_below="@id/take_photo_button"
+        android:layout_centerHorizontal="true"/>
+
+
+    <TextureView
+        android:id="@+id/review_texture_view"
+        android:layout_width="match_parent"
+        android:layout_height="276dp" />
+
+    <Button
+        android:id="@+id/submit_review_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Soumettre l'avis" />
+
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="118dp"
+        android:layout_height="wrap_content"
+        android:text="Retour" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleReview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

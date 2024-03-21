@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -31,6 +32,10 @@ public class Restaurant implements Parcelable {
 
     private GeoPoint location;
 
+    private Double latitude;
+
+    private Double longitude;
+
     protected Restaurant(Parcel in) {
         id = in.readString();
         title = in.readString();
@@ -45,7 +50,8 @@ public class Restaurant implements Parcelable {
         reservation = in.readByte() != 0;
         long openingMillis = in.readLong();
         opening = new Date(openingMillis);
-        location = in.readParcelable(GeoPoint.class.getClassLoader());
+        latitude = in.readDouble();
+        longitude = in.readDouble();
     }
     public Restaurant(String id,String title, String type, String address,String description,String prixMoy, String tel,String capacity, String img, Double rating, Boolean reservation, Date opening, GeoPoint location){
         this.id = id;
@@ -60,7 +66,11 @@ public class Restaurant implements Parcelable {
         this.rating = rating;
         this.reservation = reservation;
         this.opening = opening;
-        this.location = location;
+            this.location = location;
+            this.latitude = location.getLatitude();
+            this.longitude = location.getLongitude();
+
+
     }
 
     public static final Creator<Restaurant> CREATOR = new Creator<Restaurant>() {
@@ -126,6 +136,14 @@ public class Restaurant implements Parcelable {
         return location;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -146,7 +164,11 @@ public class Restaurant implements Parcelable {
         dest.writeDouble(rating);
         dest.writeByte((byte) (reservation ? 1 : 0));
         dest.writeLong(opening.getTime());
-        dest.writeParcelable((Parcelable) location, flags);
+
+            dest.writeDouble(latitude);
+            dest.writeDouble(longitude);
+            //Log.d("LocationInfo2", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
+
     }
 }
 

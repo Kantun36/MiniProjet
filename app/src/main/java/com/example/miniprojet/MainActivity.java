@@ -63,8 +63,14 @@ public class MainActivity extends AppCompatActivity {
                         Double restaurantRating = document.getDouble("eval_moyenne");
                         Boolean restaurantReservation = document.getBoolean("reservation_en_ligne");
                         Date restaurantOpening = document.getDate("horaire_ouverture");
-                        GeoPoint location = document.getGeoPoint("location");
-                        String restaurantImg = document.getString("image");
+                        GeoPoint location = document.getGeoPoint("coordonnées");
+                        if (location != null) {
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
+                            //Log.d("LocationInfo", "Latitude: " + latitude + ", Longitude: " + longitude);
+                        } else {
+                            //Log.e("LocationInfo", "GeoPoint is null");
+                        } String restaurantImg = document.getString("image");
 
                         String restaurantCapacity = (document.getString("capacite"));
                         String restaurantDescription = document.getString("description");

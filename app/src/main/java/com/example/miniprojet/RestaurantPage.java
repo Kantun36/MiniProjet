@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -105,7 +106,7 @@ public class RestaurantPage extends AppCompatActivity{
 
     private void displayRestaurantInfo(Restaurant restaurant, TextView title, TextView description, TextView adresse,
                                        TextView telephone, TextView horaire, TextView prix, TextView type,
-                                       TextView capacite, ImageView img,Button reservationButton ) {
+                                       TextView capacite, ImageView img, Button reservationButton ) {
         // Récupérer les informations du restaurant sélectionné
         String restaurantName = restaurant.getTitle();
         String restaurantImg = restaurant.getImg();
@@ -118,7 +119,26 @@ public class RestaurantPage extends AppCompatActivity{
         String restaurantPhone = restaurant.getTel();
         String restaurantPrice = restaurant.getPrixMoy();
         String restaurantCapacity = restaurant.getCapacity();
-        com.google.firebase.firestore.GeoPoint restaurantLocation = restaurant.getLocation(); // Récupérer la localisation du restaurant
+
+        // Vérifier si la localisation du restaurant est null
+
+            Double latitude = restaurant.getLatitude();
+            Double longitude = restaurant.getLongitude();
+            Log.d("LocationInfo5", "Latitude: " + latitude + ", Longitude: " + longitude);
+            // Utiliser latitude et longitude comme nécessaire
+
+            // Créer un marqueur pour le restaurant
+            Marker restaurantMarker = new Marker(mapView);
+            restaurantMarker.setPosition(new GeoPoint(latitude, longitude));
+            restaurantMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            restaurantMarker.setTitle("Restaurant");
+            mapView.getOverlays().add(restaurantMarker);
+
+            // Centrer la carte sur le restaurant avec un niveau de zoom approprié
+            mapView.getController().setCenter(new GeoPoint(latitude, longitude));
+            mapView.getController().setZoom(12); // Niveau de zoom 12
+
+
 
         // Afficher les informations du restaurant sélectionné dans les TextViews
         title.setText(restaurantName);
@@ -150,24 +170,8 @@ public class RestaurantPage extends AppCompatActivity{
         String newTextCapacity = existingTextCapacity + " " + restaurantCapacity;
         capacite.setText(newTextCapacity);
 
-        if (restaurantLocation != null) {
-            // Extraire les coordonnées de latitude et de longitude
-            double latitude = restaurantLocation.getLatitude();
-            double longitude = restaurantLocation.getLongitude();
-
-            // Créer un marqueur pour le restaurant
-            Marker restaurantMarker = new Marker(mapView);
-            restaurantMarker.setPosition(new GeoPoint(latitude, longitude));
-            restaurantMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            restaurantMarker.setTitle("Restaurant");
-            mapView.getOverlays().add(restaurantMarker);
-
-            // Centrer la carte sur le restaurant avec un niveau de zoom approprié
-            mapView.getController().setCenter(new GeoPoint(latitude, longitude));
-            mapView.getController().setZoom(12); // Niveau de zoom 12
-        }
         // Vérifier si les réservations sont autorisées pour le restaurant sélectionné
-        if (restaurantReservation) {
+        if (restaurantReservation != null && restaurantReservation) {
             // Les réservations sont autorisées, donc le bouton "réserver" est activé
             reservationButton.setEnabled(true);
         } else {
