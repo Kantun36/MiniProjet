@@ -52,7 +52,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
                 .into(holder.restaurantImageView);
 
         holder.ratingTextView.setText(item.getRating().toString());
-        holder.onlineReservationTextView.setText(item.getReservation().toString());
+        if(item.getReservation() == true){
+            holder.onlineReservationTextView.setText("Réservable");
+        }else{
+            holder.onlineReservationTextView.setText("Non réservable");
+        }
         holder.openingTimeTextView.setText(item.getOpening().toString());
 
     }
