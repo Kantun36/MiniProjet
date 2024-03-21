@@ -5,15 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.miniprojet.model.Restaurant;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -42,6 +45,27 @@ public class MainActivity extends AppCompatActivity {
             public void onCallback(List<Restaurant> restaurants) {
                 RestaurantAdapter adapter = new RestaurantAdapter(MainActivity.this, restaurants);
                 recyclerView.setAdapter(adapter);
+            }
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // Définir un écouteur pour les éléments du menu de navigation inférieure
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.boutonHome) {
+                    startActivity(new Intent(MainActivity.this, MainActivity.class));
+                    return true;
+                } else if (itemId == R.id.boutonMap) {
+                    startActivity(new Intent(MainActivity.this, MapActivity.class));
+                    return true;
+                }
+
+                return false;
             }
         });
 
