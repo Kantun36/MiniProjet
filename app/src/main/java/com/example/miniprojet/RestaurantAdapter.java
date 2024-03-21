@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder> {
@@ -57,7 +59,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         }else{
             holder.onlineReservationTextView.setText("Non réservable");
         }
-        holder.openingTimeTextView.setText(item.getOpening().toString());
+        Date openingTime = item.getOpening();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
+        String openingTimeString = dateFormat.format(openingTime);
+        holder.openingTimeTextView.setText(openingTimeString);
+
 
     }
 
