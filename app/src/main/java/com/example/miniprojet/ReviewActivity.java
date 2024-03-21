@@ -142,8 +142,13 @@ public class ReviewActivity extends AppCompatActivity {
                 String comment = reviewComment.getText().toString();
                 float rating = reviewRating.getRating();
 
-                // Upload review data to Firebase
-                uploadReviewData(comment, rating);
+                // Vérifier si le commentaire et la note ne sont pas vides
+                if (!comment.isEmpty() && rating > 0) {
+                    // Upload review data to Firebase
+                    uploadReviewData(comment, rating);
+                } else {
+                    Toast.makeText(ReviewActivity.this, "Veuillez remplir le commentaire et la note.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -259,50 +264,60 @@ public class ReviewActivity extends AppCompatActivity {
 
         Review review = new Review(comment, rating);
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference photoRef = storageRef.child("restaurants/" + restaurantId + "/reviews/" + review.getId() + ".jpg");
+        if (photoUri != null) {
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            StorageReference photoRef = storageRef.child("restaurants/" + restaurantId + "/reviews/" + review.getId() + ".jpg");
 
-        UploadTask uploadTask = photoRef.putFile(photoUri);
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
+            UploadTask uploadTask = photoRef.putFile(photoUri);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    return photoRef.getDownloadUrl();
                 }
-
-                return photoRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    review.setPhotoUrl(downloadUri.toString());
-
-                    DocumentReference restaurantRef = db.collection("restaurant").document(restaurantId);
-
-                    review.setTimestamp(new Timestamp(new Date()));
-
-                    restaurantRef.collection("avis").document(review.getId()).set(review)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(ReviewActivity.this, "Avis soumis avec succès !", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(ReviewActivity.this, "Échec de l'envoi de l'avis", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                } else {
-                    Toast.makeText(ReviewActivity.this, "Échec du téléchargement de l'image", Toast.LENGTH_SHORT).show();
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        review.setPhotoUrl(downloadUri.toString());
+                        uploadReviewDataToFirestore(review, restaurantId);
+                    } else {
+                        Toast.makeText(ReviewActivity.this, "Échec du téléchargement de l'image", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            uploadReviewDataToFirestore(review, restaurantId);
+        }
     }
+
+    private void uploadReviewDataToFirestore(Review review, String restaurantId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference restaurantRef = db.collection("restaurant").document(restaurantId);
+
+        review.setTimestamp(new Timestamp(new Date()));
+
+        restaurantRef.collection("avis").document(review.getId()).set(review)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(ReviewActivity.this, "Avis soumis avec succès !", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ReviewActivity.this, "Échec de l'envoi de l'avis", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
     private void savePhoto() {
         if (mTextureView.isAvailable()) {
