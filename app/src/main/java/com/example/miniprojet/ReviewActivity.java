@@ -29,7 +29,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
@@ -53,20 +52,16 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 import java.util.Arrays;
 
@@ -81,7 +76,6 @@ public class ReviewActivity extends AppCompatActivity {
 
     private EditText reviewComment;
     private RatingBar reviewRating;
-    private ImageView reviewPhoto;
     private Button takePhotoButton;
     private Button submitReviewButton;
 
@@ -217,6 +211,8 @@ public class ReviewActivity extends AppCompatActivity {
         }
     }
 
+
+
     private void createCameraPreview() {
         try {
             SurfaceTexture texture = mTextureView.getSurfaceTexture();
@@ -274,7 +270,6 @@ public class ReviewActivity extends AppCompatActivity {
                     throw task.getException();
                 }
 
-                // Continue with the task to get the download URL
                 return photoRef.getDownloadUrl();
             }
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -311,10 +306,18 @@ public class ReviewActivity extends AppCompatActivity {
 
     private void savePhoto() {
         if (mTextureView.isAvailable()) {
+            closeCamera();
             Bitmap bitmap = mTextureView.getBitmap();
             if (bitmap != null) {
                 photoUri = saveBitmapAndGetUri(bitmap);
-                Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show();
+                if (photoUri != null) {
+                    try {
+                        mTextureView.setSurfaceTexture(new SurfaceTexture(0));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(this, "Image sauvegardée", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -337,7 +340,16 @@ public class ReviewActivity extends AppCompatActivity {
         }
         return imageUri;
     }
-
+    private void closeCamera() {
+        if (mCaptureSession != null) {
+            mCaptureSession.close();
+            mCaptureSession = null;
+        }
+        if (mCameraDevice != null) {
+            mCameraDevice.close();
+            mCameraDevice = null;
+        }
+    }
 
 
 
