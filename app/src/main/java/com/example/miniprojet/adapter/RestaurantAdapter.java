@@ -1,5 +1,7 @@
-package com.example.miniprojet;
+package com.example.miniprojet.adapter;
 import com.bumptech.glide.Glide;
+import com.example.miniprojet.R;
+import com.example.miniprojet.RestaurantPage;
 import com.example.miniprojet.model.Restaurant;
 
 import android.content.Context;
@@ -98,7 +100,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        // Get the selected restaurant
                         Restaurant selectedRestaurant = itemList.get(position);
 
                         Intent intent = new Intent(context, RestaurantPage.class);

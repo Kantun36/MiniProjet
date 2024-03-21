@@ -112,7 +112,6 @@ public class RestaurantPage extends AppCompatActivity{
         String restaurantImg = restaurant.getImg();
         String restaurantType = restaurant.getType();
         String restaurantAddress = restaurant.getAddress();
-        Double restaurantRating = restaurant.getRating();
         Boolean restaurantReservation = restaurant.getReservation();
         Date restaurantOpening = restaurant.getOpening();
         String restaurantDescription = restaurant.getDescription();
@@ -147,7 +146,7 @@ public class RestaurantPage extends AppCompatActivity{
         String existingTextTelephone = telephone.getText().toString();
         String newTextTelephone = existingTextTelephone + " " + restaurantPhone;
         telephone.setText(newTextTelephone);
-        DateFormat dateFormat = new SimpleDateFormat("EEE, MMM d", Locale.US);
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         String formattedOpening = dateFormat.format(restaurantOpening);
         String existingTextHoraire = horaire.getText().toString();
         String newTextHoraire = existingTextHoraire + " " + formattedOpening;

@@ -1,73 +1,34 @@
 package com.example.miniprojet;
 
-import android.Manifest;
-
-import android.content.Context;
 import android.content.Intent;
 
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 
-import android.graphics.SurfaceTexture;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.CaptureRequest;
-
-
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 
-
-import android.view.Surface;
-import android.view.TextureView;
 
 import android.util.Log;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RatingBar;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
-
 
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.miniprojet.adapter.ReviewAdapter;
+import com.example.miniprojet.adapter.ReviewCallback;
 import com.example.miniprojet.model.Review;
 
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import java.util.Arrays;
 
 import java.util.ArrayList;
 
-import java.util.Date;
 import java.util.List;
 
 public class ReviewActivity extends AppCompatActivity {
@@ -137,7 +98,6 @@ public class ReviewActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Gérer l'erreur de récupération des données ici
                     Log.w("MainActivity", "Erreur lors de la récupération des données", e);
                 });
     }

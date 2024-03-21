@@ -66,9 +66,9 @@ public class Restaurant implements Parcelable {
         this.rating = rating;
         this.reservation = reservation;
         this.opening = opening;
-            this.location = location;
-            this.latitude = location.getLatitude();
-            this.longitude = location.getLongitude();
+        this.location = location;
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
 
 
     }
@@ -164,10 +164,8 @@ public class Restaurant implements Parcelable {
         dest.writeDouble(rating);
         dest.writeByte((byte) (reservation ? 1 : 0));
         dest.writeLong(opening.getTime());
-
-            dest.writeDouble(latitude);
-            dest.writeDouble(longitude);
-            //Log.d("LocationInfo2", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
 
     }
 }
