@@ -36,6 +36,10 @@ public class Restaurant implements Parcelable {
 
     private Double longitude;
 
+    public Restaurant() {
+        // Constructeur vide
+    }
+
     protected Restaurant(Parcel in) {
         id = in.readString();
         title = in.readString();
@@ -168,5 +172,7 @@ public class Restaurant implements Parcelable {
         dest.writeDouble(longitude);
 
     }
+
+
 }
 
