@@ -171,7 +171,9 @@ public class MainActivity extends AppCompatActivity {
                     double averageRating = (numberOfReviews > 0) ? totalRating / numberOfReviews : 0;
                     // Formater la moyenne avec un seul chiffre après la virgule
                     DecimalFormat df = new DecimalFormat("#.#");
-                    double formattedAverageRating = Double.parseDouble(df.format(averageRating));
+                    String formattedAverageRatingStr = df.format(averageRating).replace(',', '.');
+                    double formattedAverageRating = Double.parseDouble(formattedAverageRatingStr);
+
                     // Retourne la moyenne via le listener
                     listener.onAverageRatingCalculated(formattedAverageRating);
                 } else {
